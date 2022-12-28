@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "997107121050",
+    "project_id": "goodtouchstaff",
+    "storage_bucket": "goodtouchstaff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997107121050:android:506262fcd703238db01823",
+        "android_client_info": {
+          "package_name": "com.bettertouchingstaff.better_touching_staff"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "997107121050-bv9h4fthmegmlll0aub7qs1dmn4ronun.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq6QqnY1lY6xbROoD6M1k-_X3L3EYyZx8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "997107121050-bv9h4fthmegmlll0aub7qs1dmn4ronun.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

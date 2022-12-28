@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; // install FlutterFire_CLI
 
 void main() {
   runApp(const MyApp());
