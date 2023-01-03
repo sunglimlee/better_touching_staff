@@ -5,6 +5,13 @@ class AuthService {
   // 잘봐라 default 이므로 무조건 하나로만 서비스된다. 즉 이 자체가 singleton 이란 뜻
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
+  // 이제 이 _firebaseAuth 는 하나만 존재하므로 여기에서 값을 Stream 으로 받아서 그 값을 변경하도록 하면 된다.
+  // Firebase Auth Service 가 Stream 을 이용해서 자동으로 값을 보내준다. authStateChanges() 를 이용해서
+  // Auth change user stream
+  Stream<User?> get user {
+    return _firebaseAuth.authStateChanges();
+  }
+
   // sign in anonymous
   Future<dynamic> signInAnonymous() async {
     try {
@@ -13,16 +20,26 @@ class AuthService {
       // 이렇게 하면 여기서 기다려야 하는거잖아.
       UserCredential userCredential = await _firebaseAuth.signInAnonymously();
       // 기다렸기 때문에 값을 받는게 가능하지.
-      User? user = userCredential.user;
+      User? user = userCredential.user; // 일반적인 방법
+      // 내가 필요한 것만 추림 User
       return user;
     } catch (e) {
       print(e.toString());
       return null;
     }
   }
+
 // sign in email & password
 
 // register with email & password
 
-// sign out
+  // sign out
+  Future<dynamic> signOut() async {
+    try {
+      return await _firebaseAuth.signOut();
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 }
