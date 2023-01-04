@@ -1,4 +1,5 @@
 import 'package:better_touching_staff/controllers/auth_controller.dart';
+import 'package:better_touching_staff/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class Register extends StatefulWidget {
@@ -55,6 +56,8 @@ class _RegisterState extends State<Register> {
               ),
               // email
               TextFormField(
+                // TODO : decoration
+                decoration: myInputDecoration.copyWith(hintText: 'Email'),
                 // TODO : email validation 기능 더 넣어야함.
                 validator: (val) {
                   return val!.isEmpty ? 'Enter an Email' : null;
@@ -71,7 +74,9 @@ class _RegisterState extends State<Register> {
               // password
               TextFormField(
                 // TODO : password validation 기능 더 넣어야함.
-                validator: (val) {
+                // TODO : TextFormField 를 좀 더 꾸며주자.
+                decoration: myInputDecoration.copyWith(hintText: 'Password'),
+              validator: (val) {
                   return val!.length < 6
                       ? 'Enter a password 6+ chars long'
                       : null;
@@ -91,9 +96,10 @@ class _RegisterState extends State<Register> {
                     backgroundColor: Colors.pink[400],
                     textStyle: const TextStyle(color: Colors.white)),
                 onPressed: () async {
+                  // TODO 향후 여기서도 파이어베이스에서 넘어온 에러값을 활용해보자.
                   if (_formKey.currentState!.validate()) {
                     dynamic result =
-                        await _authController.registerEmailAndPassword(
+                        await _authController.registerWithEmailAndPassword(
                             email.toString(), password.toString());
                     if (result == null) {
                       setState(() {

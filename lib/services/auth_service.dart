@@ -29,9 +29,7 @@ class AuthService {
     }
   }
 
-  // sign in email & password
-
-  // sign out
+  // log out
   Future<dynamic> signOut() async {
     try {
       return await _firebaseAuth.signOut();
@@ -42,7 +40,7 @@ class AuthService {
   }
 
   // register with email & password
-  Future<dynamic> registerEmailAndPassword(
+  Future<dynamic> registerWithEmailAndPassword(
       String email, String password) async {
     try {
       UserCredential userCredential = await _firebaseAuth
@@ -52,6 +50,19 @@ class AuthService {
     } catch (e) {
       print(e.toString());
       return null;
+    }
+  }
+
+  // login with email & password
+  Future<dynamic> loginWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      UserCredential userCredential = await _firebaseAuth
+          .signInWithEmailAndPassword(email: email, password: password);
+      return userCredential.user;
+    } catch (e) {
+      print(e.toString());
+      return null; // 문제가 생겼기 때문에 null 을 리턴한다. TODO 향후 여기서 e.toString() 을 리턴해서 서버의 에러값을 활용하자.
     }
   }
 }

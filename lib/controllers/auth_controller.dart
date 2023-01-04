@@ -13,13 +13,19 @@ class AuthController {
 
   // sign in anonymous
   Future<dynamic> signInAnonymous() async {
-    return authService.signInAnonymous();
+    return await authService.signInAnonymous();
   }
 
   // register with email & password
-  Future<dynamic> registerEmailAndPassword(
+  Future<dynamic> registerWithEmailAndPassword(
       String email, String password) async {
-    return authService.registerEmailAndPassword(email, password);
+    return await authService.registerWithEmailAndPassword(email, password);
+  }
+
+  // login with email & password
+  Future<dynamic> loginWithEmailAndPassword(
+      String email, String password) async {
+    return await authService.loginWithEmailAndPassword(email, password);
   }
 
   // sign out
