@@ -18,6 +18,7 @@ class _RegisterState extends State<Register> {
   String email = '';
   String password = '';
   String error = '';
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -45,82 +46,91 @@ class _RegisterState extends State<Register> {
               label: const Text('LogIn'))
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20.0,
+      body: loading
+          ? const Center(child: CircularProgressIndicator())
+          : Container(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    // email
+                    TextFormField(
+                      // TODO : decoration
+                      decoration: myInputDecoration.copyWith(hintText: 'Email'),
+                      // TODO : email validation 기능 더 넣어야함.
+                      validator: (val) {
+                        return val!.isEmpty ? 'Enter an Email' : null;
+                      },
+                      onChanged: (val) {
+                        setState(() {
+                          email = val;
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    // password
+                    TextFormField(
+                      // TODO : password validation 기능 더 넣어야함.
+                      // TODO : TextFormField 를 좀 더 꾸며주자.
+                      decoration:
+                          myInputDecoration.copyWith(hintText: 'Password'),
+                      validator: (val) {
+                        return val!.length < 6
+                            ? 'Enter a password 6+ chars long'
+                            : null;
+                      },
+                      onChanged: (val) {
+                        setState(() {
+                          password = val;
+                        });
+                      },
+                      obscureText: true,
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.pink[400],
+                          textStyle: const TextStyle(color: Colors.white)),
+                      onPressed: () async {
+                        // TODO 향후 여기서도 파이어베이스에서 넘어온 에러값을 활용해보자.
+                        if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            loading = true;
+                          });
+                          dynamic result = await _authController
+                              .registerWithEmailAndPassword(
+                                  email.toString(), password.toString());
+                          if (result == null) {
+                            setState(() {
+                              loading = false;
+                              error =
+                                  'Please supply a valid email and password';
+                            });
+                          }
+                        }
+                      },
+                      child: const Text('   Register   '),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Text(
+                      error,
+                      style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                    ),
+                  ],
+                ),
               ),
-              // email
-              TextFormField(
-                // TODO : decoration
-                decoration: myInputDecoration.copyWith(hintText: 'Email'),
-                // TODO : email validation 기능 더 넣어야함.
-                validator: (val) {
-                  return val!.isEmpty ? 'Enter an Email' : null;
-                },
-                onChanged: (val) {
-                  setState(() {
-                    email = val;
-                  });
-                },
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              // password
-              TextFormField(
-                // TODO : password validation 기능 더 넣어야함.
-                // TODO : TextFormField 를 좀 더 꾸며주자.
-                decoration: myInputDecoration.copyWith(hintText: 'Password'),
-              validator: (val) {
-                  return val!.length < 6
-                      ? 'Enter a password 6+ chars long'
-                      : null;
-                },
-                onChanged: (val) {
-                  setState(() {
-                    password = val;
-                  });
-                },
-                obscureText: true,
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pink[400],
-                    textStyle: const TextStyle(color: Colors.white)),
-                onPressed: () async {
-                  // TODO 향후 여기서도 파이어베이스에서 넘어온 에러값을 활용해보자.
-                  if (_formKey.currentState!.validate()) {
-                    dynamic result =
-                        await _authController.registerWithEmailAndPassword(
-                            email.toString(), password.toString());
-                    if (result == null) {
-                      setState(() {
-                        error = 'Please supply a valid email and password';
-                      });
-                    }
-                  }
-                },
-                child: const Text('   Register   '),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              Text(
-                error,
-                style: const TextStyle(color: Colors.red, fontSize: 14.0),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }
