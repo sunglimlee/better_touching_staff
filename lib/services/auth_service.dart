@@ -29,14 +29,26 @@ class AuthService {
     }
   }
 
-// sign in email & password
-
-// register with email & password
+  // sign in email & password
 
   // sign out
   Future<dynamic> signOut() async {
     try {
       return await _firebaseAuth.signOut();
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  // register with email & password
+  Future<dynamic> registerEmailAndPassword(
+      String email, String password) async {
+    try {
+      UserCredential userCredential = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      User? user = userCredential.user;
+      return user;
     } catch (e) {
       print(e.toString());
       return null;

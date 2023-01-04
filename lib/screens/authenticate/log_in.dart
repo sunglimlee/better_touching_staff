@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class LogIn extends StatefulWidget {
   final Function callBack;
+
   const LogIn({Key? key, required this.callBack}) : super(key: key);
 
   @override
@@ -26,7 +27,7 @@ class _LogInState extends State<LogIn> {
         title: const Text('LogIn to Staffan'),
         actions: [
           ElevatedButton.icon(
-            // Log Out
+              // Log Out
               onPressed: () {
                 // 여기서 setState 를 할 필요가 없지.. 외부에서 할거니깐..
                 widget.callBack();
@@ -40,7 +41,6 @@ class _LogInState extends State<LogIn> {
               icon: const Icon(Icons.person),
               label: const Text('Register'))
         ],
-
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),

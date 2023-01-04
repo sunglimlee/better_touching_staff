@@ -33,6 +33,9 @@ class Home extends StatelessWidget {
               label: const Text('SignOut'))
         ],
       ),
+      body: const Center(
+        child: Text('Home Page'),
+      ),
     );
   }
 }

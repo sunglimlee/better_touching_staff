@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Good Touching Staff',
+        // TODO Theme 해야한다.
         theme: ThemeData(
           primarySwatch: Colors.brown,
         ),
