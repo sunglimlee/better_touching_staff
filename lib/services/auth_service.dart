@@ -1,3 +1,4 @@
+import 'package:better_touching_staff/services/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 /// Firebase 이용한 Authentication
@@ -8,6 +9,7 @@ class AuthService {
   // 이제 이 _firebaseAuth 는 하나만 존재하므로 여기에서 값을 Stream 으로 받아서 그 값을 변경하도록 하면 된다.
   // Firebase Auth Service 가 Stream 을 이용해서 자동으로 값을 보내준다. authStateChanges() 를 이용해서
   // Auth change user stream
+  // 언제든지 User 정보를 받아올 수 있다. 그리고 uid 도 알 수 있게된다.
   Stream<User?> get user {
     return _firebaseAuth.authStateChanges();
   }
@@ -46,6 +48,12 @@ class AuthService {
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       User? user = userCredential.user;
+      // create a new document for the user with the uid
+      // 반드시 await 를 해주어야 한다. 기억해라 database 작업은 반드시 await 를 해주어야 한다. 안그러면 그냥 넘어가 버린다. 꼭 꼭 꼭 기억하자.
+      user != null
+          ? await DatabaseService(user: user)
+              .addNewUserDummyDataIntoFirestore('New User')
+          : print('User is Null in [AuthService]');
       return user;
     } catch (e) {
       print(e.toString());

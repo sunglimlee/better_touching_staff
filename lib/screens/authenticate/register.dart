@@ -60,6 +60,7 @@ class _RegisterState extends State<Register> {
                     ),
                     // email
                     TextFormField(
+                      initialValue: email, // 초기값을 계속 가지고 있도록 한다.
                       // TODO : decoration
                       decoration: myInputDecoration.copyWith(hintText: 'Email'),
                       // TODO : email validation 기능 더 넣어야함.
@@ -77,6 +78,8 @@ class _RegisterState extends State<Register> {
                     ),
                     // password
                     TextFormField(
+                      initialValue: password,
+                      // 초기값을 계속 가지고 있도록 한다.
                       // TODO : password validation 기능 더 넣어야함.
                       // TODO : TextFormField 를 좀 더 꾸며주자.
                       decoration:
@@ -109,6 +112,7 @@ class _RegisterState extends State<Register> {
                           dynamic result = await _authController
                               .registerWithEmailAndPassword(
                                   email.toString(), password.toString());
+                          // 여기다가 새로운 User 의 uid 를 이용해서 dummy data 를 collection 에 저장하고 싶어...
                           if (result == null) {
                             setState(() {
                               loading = false;
