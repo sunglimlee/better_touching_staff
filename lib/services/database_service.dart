@@ -33,4 +33,11 @@ class DatabaseService {
       print('registerUserDataIntoFirestore function in DatabaseService Class');
     }
   }
+  // get job_list stream
+  // new user 가 들어왔을 때 data 가 바뀌었다는 걸 알려주는 함수, 보고 싶은 내용이 뭔데?
+  // 여기서 받는 값을 내가 원하는 데이터로 바꾸어서 provider 로 보내고 그 보낸 파일이 듣고 있는 곳들에게 다시 업데이트 되도록 해준다.
+  Stream<QuerySnapshot> get jobList {
+    return jobCollectionReference.snapshots();
+  }
+
 }
