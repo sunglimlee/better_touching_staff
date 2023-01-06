@@ -43,7 +43,9 @@ class DatabaseService {
   // new user 가 들어왔을 때 data 가 바뀌었다는 걸 알려주는 함수, 보고 싶은 내용이 뭔데?
   // 여기서 받는 값을 내가 원하는 데이터로 바꾸어서 provider 로 보내고 그 보낸 파일이 듣고 있는 곳들에게 다시 업데이트 되도록 해준다.
   Stream<List<JobModel>> get jobList {
-    return jobCollectionReference.snapshots().map((snapshot) => _jobModelListFromSnapshot(snapshot));
+    return jobCollectionReference
+        .snapshots()
+        .map((snapshot) => _jobModelListFromSnapshot(snapshot));
   }
 
   // job list from snapshot
@@ -52,7 +54,9 @@ class DatabaseService {
     // QuerySnapshot 에서 JobModel 로 변환
     // [issue] The argument type 'Object?' can't be assigned to the parameter type 'Map<String, dynamic>'
     // [answer] https://stackoverflow.com/questions/70621423/the-argument-type-object-cant-be-assigned-to-the-parameter-type-mapdynamic
-    return querySnapshot.docs.map((doc) => JobModel.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    return querySnapshot.docs
+        .map((doc) => JobModel.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
     /*return querySnapshot.docs.map((doc) {
       return JobModel(
         name: doc.get('name') ?? '',

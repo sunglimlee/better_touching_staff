@@ -15,7 +15,8 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<JobModel>?>.value(
-      initialData: null, // QuerySnapshot? null 로 해주어야 initialData 도 null 이 될 수 있다.
+      initialData: null,
+      // QuerySnapshot? null 로 해주어야 initialData 도 null 이 될 수 있다.
       value: DatabaseService().jobList,
       child: Scaffold(
         backgroundColor: Colors.brown[50],
@@ -42,7 +43,7 @@ class Home extends StatelessWidget {
           ],
         ),
         body: const JobList(),
-        ),
-      );
+      ),
+    );
   }
 }

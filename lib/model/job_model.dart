@@ -1,5 +1,4 @@
 class JobModel {
-
   late String _name;
   late int? _age;
   late int? _coupon;
@@ -11,7 +10,9 @@ class JobModel {
   }
 
   String get name => _name;
+
   int? get age => _age;
+
   int? get coupon => _coupon;
 
   JobModel.fromJson(Map<String, dynamic> json) {
@@ -23,11 +24,10 @@ class JobModel {
 
   Map<String, dynamic> toJson() {
     return {
-      "name" : _name, // 왜냐면 Map 이니깐..
-      "age" : _age,
-      "coupon" : _coupon,
+      "name": _name, // 왜냐면 Map 이니깐..
+      "age": _age,
+      "coupon": _coupon,
       //"product": this.product?.toJson() // 여기서 다른 이름 json 으로 되어 있었다...
     };
   }
-
 }
