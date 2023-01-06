@@ -1,3 +1,4 @@
+import 'package:better_touching_staff/model/job_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -19,25 +20,45 @@ class DatabaseService {
   // 4. 그것도 아니라면 Auth_Service 에서 User 를 받는 함수를 만들어서 그 함수를 여기서 호출해도 되고..
   // uid 로 연결을 하는것이므로 반드시 필요한 작업이다.
   // 일반적으로 새로운 유저의 uid 를 가지고 데이터를 저장하는 거니깐 authentication 이 문제가 없을 때 그 때 받은 user 정보를 이용해서 바로 다음에 이 함수를 실행토록 한다.
-  Future<dynamic> addNewUserDummyDataIntoFirestore(String name) async {
+  Future<dynamic> addNewUserDummyDataIntoFirestore(
+      {String name = 'New User', int age = 20, int coupon = 100}) async {
     try {
       user == null
           ? () {
               print("User doesn't exists");
               return null;
             }()
+          // 원하는대로 값을 넣을 수 있게 되었다.
           : await jobCollectionReference.doc(user!.uid).set({
               'name': name,
+              'age': age,
+              'coupon': coupon,
             }); // 이제부터 Firestore 데어터를 Add 하는 방법을 알아야 하는구나.
     } catch (e) {
       print('registerUserDataIntoFirestore function in DatabaseService Class');
     }
   }
+
   // get job_list stream
   // new user 가 들어왔을 때 data 가 바뀌었다는 걸 알려주는 함수, 보고 싶은 내용이 뭔데?
   // 여기서 받는 값을 내가 원하는 데이터로 바꾸어서 provider 로 보내고 그 보낸 파일이 듣고 있는 곳들에게 다시 업데이트 되도록 해준다.
-  Stream<QuerySnapshot> get jobList {
-    return jobCollectionReference.snapshots();
+  Stream<List<JobModel>> get jobList {
+    return jobCollectionReference.snapshots().map((snapshot) => _jobModelListFromSnapshot(snapshot));
   }
 
+  // job list from snapshot
+  // 매번 바뀔 때 마다 Stream 에서 불러오기 위해서 함수로 만든다.
+  List<JobModel> _jobModelListFromSnapshot(QuerySnapshot querySnapshot) {
+    // QuerySnapshot 에서 JobModel 로 변환
+    // [issue] The argument type 'Object?' can't be assigned to the parameter type 'Map<String, dynamic>'
+    // [answer] https://stackoverflow.com/questions/70621423/the-argument-type-object-cant-be-assigned-to-the-parameter-type-mapdynamic
+    return querySnapshot.docs.map((doc) => JobModel.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    /*return querySnapshot.docs.map((doc) {
+      return JobModel(
+        name: doc.get('name') ?? '',
+        age: doc.get('age') ?? 20,
+        coupon: doc.get('coupon') ?? 100,
+      );
+    }).toList();*/
+  }
 }

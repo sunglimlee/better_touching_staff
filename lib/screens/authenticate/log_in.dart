@@ -79,7 +79,7 @@ class _LogInState extends State<LogIn> {
                     // password
                     TextFormField(
                       // TODO : password validation 기능 더 넣어야함.
-                      //initialValue: password,
+                      initialValue: password,
                       decoration:
                           myInputDecoration.copyWith(hintText: 'Password'),
                       validator: (val) {

@@ -1,5 +1,6 @@
 import 'package:better_touching_staff/controllers/auth_controller.dart';
-import 'package:better_touching_staff/screens/home/brew_list.dart';
+import 'package:better_touching_staff/model/job_model.dart';
+import 'package:better_touching_staff/screens/home/job_list.dart';
 import 'package:better_touching_staff/services/database_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<QuerySnapshot?>.value(
+    return StreamProvider<List<JobModel>?>.value(
       initialData: null, // QuerySnapshot? null 로 해주어야 initialData 도 null 이 될 수 있다.
       value: DatabaseService().jobList,
       child: Scaffold(
@@ -40,7 +41,7 @@ class Home extends StatelessWidget {
                 label: const Text('SignOut'))
           ],
         ),
-        body: const BrewList(),
+        body: const JobList(),
         ),
       );
   }
