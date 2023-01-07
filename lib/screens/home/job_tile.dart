@@ -17,6 +17,8 @@ class JobTile extends StatelessWidget {
         margin: const EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 0),
         child: ListTile(
           leading: CircleAvatar(
+              // 이미지의 중간부분이 Transparent 이므로 색깔이 보이는 것이다. 이미지를 투명하게 해서 백그라운드 컬러를 보여준다. 똑똑한데...
+              backgroundImage: const AssetImage('assets/coffee_icon.png'),
               radius: 25.0,
               // 지금 age 로 strength 를 맞추려고 억지로 * 10, round() 함수까지 사용했다.
               backgroundColor: () {

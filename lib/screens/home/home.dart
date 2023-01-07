@@ -3,7 +3,6 @@ import 'package:better_touching_staff/model/job_model.dart';
 import 'package:better_touching_staff/screens/home/job_list.dart';
 import 'package:better_touching_staff/screens/home/settings_form.dart';
 import 'package:better_touching_staff/services/database_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -57,16 +56,28 @@ class Home extends StatelessWidget {
                 label: const Text('SignOut')),
           ],
         ),
-        body: const JobList(),
+        // ListView 를 보여줄건데 이렇게만 해도 전체를 덮어버리네..
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/coffee_bg.png'),
+              fit: BoxFit.cover,
+            )
+          ),
+            child: const JobList()),
       ),
     );
   }
 
   void _showSettingsPanel(BuildContext context) {
-    showModalBottomSheet(context: context, builder: (context) {
-      return Container(padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-        child: SettingsForm(),
-      );
-    });
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            padding:
+                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+            child: const SettingsForm(),
+          );
+        });
   }
 }
