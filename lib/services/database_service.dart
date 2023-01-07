@@ -1,3 +1,4 @@
+import 'package:better_touching_staff/model/current_user_job_model.dart';
 import 'package:better_touching_staff/model/job_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,7 +22,9 @@ class DatabaseService {
   // uid 로 연결을 하는것이므로 반드시 필요한 작업이다.
   // 일반적으로 새로운 유저의 uid 를 가지고 데이터를 저장하는 거니깐 authentication 이 문제가 없을 때 그 때 받은 user 정보를 이용해서 바로 다음에 이 함수를 실행토록 한다.
   Future<dynamic> addNewUserDummyDataIntoFirestore(
-      {String name = 'New User', String age = '20', String coupon = '100'}) async {
+      {String name = 'New User',
+      String age = '20',
+      String coupon = '100'}) async {
     try {
       user == null
           ? () {
@@ -46,6 +49,27 @@ class DatabaseService {
     return jobCollectionReference
         .snapshots()
         .map((snapshot) => _jobModelListFromSnapshot(snapshot));
+  }
+
+  // get user doc stream : 이럴필요가 있는지 보자. 이게 진행되는게 너무나도 아름답네.. 각종 데이터들을 받아오고 만들어서 새로운 나의 데이터를 던져준다.
+  Stream<CurrentUserJobModel> get currentUserJobModel {
+    // 여기에는 user 가 무조건 있어야 하고 그리고 해당 도큐먼트의 스냅샷을 받는다.
+    // ******* 아주 중요한 부분, 맨날 하는데 오늘 새롭네.. ㅋ *******
+    // 데이터 변경을 위해서는 각 값에 대해서 변경해야 하니깐 map 을 사용해야지..
+    return jobCollectionReference
+        .doc(user!.uid)
+        .snapshots()
+        .map((event) => _currentUserJobModelFromDocumentSnapshot(event));
+  }
+
+  CurrentUserJobModel _currentUserJobModelFromDocumentSnapshot(
+      DocumentSnapshot documentSnapshot) {
+    return CurrentUserJobModel(
+      uid: user!.uid,
+      name: documentSnapshot.get('name'),
+      age: documentSnapshot.get('age'),
+      coupon: documentSnapshot.get('coupon'),
+    );
   }
 
   // job list from snapshot
