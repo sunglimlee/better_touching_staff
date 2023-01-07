@@ -45,10 +45,12 @@ class DatabaseService {
   // get job_list stream
   // new user 가 들어왔을 때 data 가 바뀌었다는 걸 알려주는 함수, 보고 싶은 내용이 뭔데?
   // 여기서 받는 값을 내가 원하는 데이터로 바꾸어서 provider 로 보내고 그 보낸 파일이 듣고 있는 곳들에게 다시 업데이트 되도록 해준다.
+  // 정말 강력하다. document 의 데이터 하나 바뀌었는데도 그걸 감지해서 snapshot 으로 다 더져 보내주다니..
+  // 근데 값이 바뀌면 리스트 전체를 리사이클링 뚜루를 한다는데.. 괜찮을까?
   Stream<List<JobModel>> get jobList {
     return jobCollectionReference
         .snapshots()
-        .map((snapshot) => _jobModelListFromSnapshot(snapshot));
+        .map((snapshot) => _transformIntoJobModelListFromSnapshot(snapshot));
   }
 
   // get user doc stream : 이럴필요가 있는지 보자. 이게 진행되는게 너무나도 아름답네.. 각종 데이터들을 받아오고 만들어서 새로운 나의 데이터를 던져준다.
@@ -59,10 +61,10 @@ class DatabaseService {
     return jobCollectionReference
         .doc(user!.uid)
         .snapshots()
-        .map((event) => _currentUserJobModelFromDocumentSnapshot(event));
+        .map((event) => _getCurrentUserJobModelFromDocumentSnapshot(event));
   }
 
-  CurrentUserJobModel _currentUserJobModelFromDocumentSnapshot(
+  CurrentUserJobModel _getCurrentUserJobModelFromDocumentSnapshot(
       DocumentSnapshot documentSnapshot) {
     return CurrentUserJobModel(
       uid: user!.uid,
@@ -74,7 +76,8 @@ class DatabaseService {
 
   // job list from snapshot
   // 매번 바뀔 때 마다 Stream 에서 불러오기 위해서 함수로 만든다.
-  List<JobModel> _jobModelListFromSnapshot(QuerySnapshot querySnapshot) {
+  List<JobModel> _transformIntoJobModelListFromSnapshot(
+      QuerySnapshot querySnapshot) {
     // QuerySnapshot 에서 JobModel 로 변환
     // [issue] The argument type 'Object?' can't be assigned to the parameter type 'Map<String, dynamic>'
     // [answer] https://stackoverflow.com/questions/70621423/the-argument-type-object-cant-be-assigned-to-the-parameter-type-mapdynamic
@@ -88,5 +91,19 @@ class DatabaseService {
         coupon: doc.get('coupon') ?? 100,
       );
     }).toList();*/
+  }
+
+  // Modify document from SettingForm with CurrentUserJobModel
+  Future<void> modifyDocumentFromSettingFormWithCurrentUserJobModel(
+      CurrentUserJobModel currentUserJobModel) async {
+    try {
+      await jobCollectionReference
+          .doc(currentUserJobModel.uid.toString())
+          .set(currentUserJobModel.toJson());
+    } catch (e) {
+      // 또는
+      // throw Exception('데이터를 쓰는 도중 에러가 발생했습니다. Error occurred while writing');
+      return Future.error('데이터를 쓰는 도중 에러가 발생했습니다.Error occurred while writing');
+    }
   }
 }

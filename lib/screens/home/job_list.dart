@@ -20,12 +20,13 @@ class _JobListState extends State<JobList> {
 
   // JobModels ListView 로 보여주는 함수
   _showListViewJobModels(BuildContext context) {
-    final jobModels = Provider.of<List<JobModel>?>(context);
+    // 리스트가 null 일 수 있으니깐 초기화를 시켜준다. 데이터의 흐름이다. 초기화와 종결화가 아주 중요하다.
+    final jobModels = Provider.of<List<JobModel>?>(context) ?? [];
     return ListView.builder(
-      itemCount: jobModels?.length ?? 0,
+      itemCount: jobModels.length,
       // 이게 100% 이해되네.. jobModels 는 null 이 될 수 있고 그래서 null 이면 0 을 출력해라는 거지..
       itemBuilder: (BuildContext context, int index) {
-        return JobTile(jobModel: jobModels?[index]);
+        return JobTile(jobModel: jobModels[index]);
       },
     );
   }

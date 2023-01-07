@@ -59,14 +59,16 @@ class _SettingsFormState extends State<SettingsForm> {
                   ),
                   // slider (age),
                   Slider(
-                      label: _currentAge ?? '0',
+                      label: _currentAge ??
+                          currentUserModelSnapshot.data!.age.toString(),
                       //double.parse((_currentAge ?? '0')).round().toString(),
                       value: () {
                         return double.parse((_currentAge ??
-                            currentUserModelSnapshot.data?.age.toString() ??
-                            '0'));
+                            currentUserModelSnapshot.data!.age.toString()));
                       }(),
                       activeColor: () {
+                        _currentAge ??=
+                            currentUserModelSnapshot.data!.age.toString();
                         var i = 0;
                         // 100 - 900 까지로 변환
                         if (int.parse(_currentAge ?? '0') <= 16) {
@@ -93,6 +95,8 @@ class _SettingsFormState extends State<SettingsForm> {
                       inactiveColor: () {
                         var i = 0;
                         // 100 - 900 까지로 변환
+                        // [issue] Invalid radix-10 number (at character 1) null ^
+                        // [answer] https://stackoverflow.com/questions/70206285/invalid-radix-10-number-at-character-1-null/70206418
                         if (int.parse(_currentAge ?? '0') <= 16) {
                           i = 100;
                         } else if (int.parse(_currentAge ?? '0') <= 16 * 2) {
@@ -127,13 +131,15 @@ class _SettingsFormState extends State<SettingsForm> {
                   // dropdown (coupon)
                   DropdownButtonFormField(
                       value: _currentCoupon ??
-                          currentUserModelSnapshot.data?.coupon.toString() ??
-                          '100',
+                          currentUserModelSnapshot.data!.coupon.toString(),
                       decoration: myInputDecoration,
                       items: _couponList.map((e) {
                         return DropdownMenuItem(
                             value: e, child: Text('$e coupons'));
                       }).toList(),
+                      validator: (val) => val != null && val.isEmpty
+                          ? 'Please choose the coupon amount'
+                          : null,
                       onChanged: (val) => setState(() {
                             _currentCoupon = val;
                           })),
@@ -144,22 +150,40 @@ class _SettingsFormState extends State<SettingsForm> {
                         backgroundColor: Colors.pink[400],
                         textStyle: const TextStyle(color: Colors.white)),
                     onPressed: () async {
+                      // validate 했는데???? Slider 때문에 여전히 null 값 체크를 해주어야 한다.
                       if (_formKey.currentState!.validate()) {
                         setState(() {
                           loading = true;
                         });
 
-                        print(_currentName);
-                        print(_currentAge ?? 'no value');
-                        print(_currentCoupon ?? 'no value');
+                        print(_currentName ??
+                            currentUserModelSnapshot.data!.name.toString());
+                        print(_currentAge ??
+                            currentUserModelSnapshot.data!.age.toString());
+                        print(_currentCoupon ??
+                            currentUserModelSnapshot.data!.coupon.toString());
 
-                        dynamic result = null;
-                        if (result == null) {
-                          setState(() {
-                            loading = false;
-                            error = 'something wrong';
-                          });
-                        }
+                        // 데이터 저장 부분
+                        // [issue] 예외처리, Exception, Future, error 해결법
+                        // https://stackoverflow.com/questions/54474689/how-do-i-return-error-from-a-future-in-dart
+                        CurrentUserJobModel currentUserJobModel =
+                            CurrentUserJobModel(
+                                uid: user.uid,
+                                name: _currentName ??
+                                    currentUserModelSnapshot.data!.name
+                                        .toString(),
+                                coupon: _currentCoupon ??
+                                    currentUserModelSnapshot.data!.coupon
+                                        .toString(),
+                                age: _currentAge ??
+                                    currentUserModelSnapshot.data!.age
+                                        .toString());
+                        // .whenComplete() 함수도 이제 알고 그걸 이용해서 Navigator.pop(context) 사용한것도 좋고... 많이 늘었네..!!!!!
+                        await DatabaseService()
+                            .modifyDocumentFromSettingFormWithCurrentUserJobModel(
+                                currentUserJobModel)
+                            .catchError((e) => print(e))
+                            .whenComplete(() => Navigator.pop(context));
                       }
                     },
                     child: const Text('     Update     '),
