@@ -20,12 +20,12 @@ class JobTile extends StatelessWidget {
             radius: 25.0,
             // 지금 age 로 strength 를 맞추려고 억지로 * 10, round() 함수까지 사용했다.
             backgroundColor: Colors.brown[
-                _jobModel?.coupon != null ? (_jobModel!.coupon!).round() : 200],
+                _jobModel?.coupon != null ? int.parse(_jobModel!.coupon!) : 200],
           ),
           title: Text(_jobModel?.name ?? 'New User'),
           subtitle: Text(_jobModel?.age != null
-              ? '${_jobModel!.age!.toString()} sugars(s).'
-              : '0 sugars(s).'),
+              ? '${_jobModel!.age!.toString()} years old.'
+              : '0 years old.'),
         ),
       ),
     );

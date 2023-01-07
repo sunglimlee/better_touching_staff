@@ -1,6 +1,7 @@
 import 'package:better_touching_staff/controllers/auth_controller.dart';
 import 'package:better_touching_staff/model/job_model.dart';
 import 'package:better_touching_staff/screens/home/job_list.dart';
+import 'package:better_touching_staff/screens/home/settings_form.dart';
 import 'package:better_touching_staff/services/database_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,20 @@ class Home extends StatelessWidget {
           elevation: 0.0,
           actions: [
             // [3 ways to to create a button with Icon and Text] https://www.flutterbeads.com/button-with-icon-and-text-flutter/
+            // setting button
+            ElevatedButton.icon(
+                // Sign Out
+                onPressed: () => _showSettingsPanel(context),
+                // ElevatedButton without, no, remove border
+                // https://stackoverflow.com/questions/69942023/how-to-remove-border-in-outlinedbutton
+                // TODO 나중에 함수나 클래스로 바꿔서 반복하지 말자.
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.brown[400],
+                    elevation: 0,
+                    shadowColor: Colors.transparent),
+                icon: const Icon(Icons.settings),
+                label: const Text('Settings')),
+            // logout button
             ElevatedButton.icon(
                 // Sign Out
                 onPressed: () {
@@ -39,11 +54,19 @@ class Home extends StatelessWidget {
                     elevation: 0,
                     shadowColor: Colors.transparent),
                 icon: const Icon(Icons.person),
-                label: const Text('SignOut'))
+                label: const Text('SignOut')),
           ],
         ),
         body: const JobList(),
       ),
     );
+  }
+
+  void _showSettingsPanel(BuildContext context) {
+    showModalBottomSheet(context: context, builder: (context) {
+      return Container(padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+        child: SettingsForm(),
+      );
+    });
   }
 }

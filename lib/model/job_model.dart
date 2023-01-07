@@ -1,9 +1,9 @@
 class JobModel {
   late String _name;
-  late int? _age;
-  late int? _coupon;
+  late String? _age;
+  late String? _coupon;
 
-  JobModel({required String name, int? age, int? coupon}) {
+  JobModel({required String name, String? age, String? coupon}) {
     _name = name;
     _age = age;
     _coupon = coupon;
@@ -11,9 +11,9 @@ class JobModel {
 
   String get name => _name;
 
-  int? get age => _age;
+  String? get age => _age;
 
-  int? get coupon => _coupon;
+  String? get coupon => _coupon;
 
   JobModel.fromJson(Map<String, dynamic> json) {
     _name = json['name'];

@@ -21,7 +21,7 @@ class DatabaseService {
   // uid 로 연결을 하는것이므로 반드시 필요한 작업이다.
   // 일반적으로 새로운 유저의 uid 를 가지고 데이터를 저장하는 거니깐 authentication 이 문제가 없을 때 그 때 받은 user 정보를 이용해서 바로 다음에 이 함수를 실행토록 한다.
   Future<dynamic> addNewUserDummyDataIntoFirestore(
-      {String name = 'New User', int age = 20, int coupon = 100}) async {
+      {String name = 'New User', String age = '20', String coupon = '100'}) async {
     try {
       user == null
           ? () {
