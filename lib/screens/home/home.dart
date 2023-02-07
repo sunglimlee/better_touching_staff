@@ -14,6 +14,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // StreamProvider 를 통해서 List<JobModel> 을 받는다.
     return StreamProvider<List<JobModel>?>.value(
       initialData: null,
       // QuerySnapshot? null 로 해주어야 initialData 도 null 이 될 수 있다.

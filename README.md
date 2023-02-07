@@ -1,4 +1,7 @@
 # better_touching_staff
+> [!info] 
+> Brew Coffee 를 공부하면서 적용시킨 앱. 네비게이션, 변수사용, 디버깅, 객체들을 이용해서 객체(데이터) 를 만들어내기, 
+> 프로바이더, Riverpod, 디렉토리 구조, 디자인, Firebase, 웹서비스(예정), Obsidian, 
 
 Projects for Staffing of Nurse, PSW
 

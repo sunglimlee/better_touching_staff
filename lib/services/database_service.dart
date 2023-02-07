@@ -48,9 +48,17 @@ class DatabaseService {
   // 정말 강력하다. document 의 데이터 하나 바뀌었는데도 그걸 감지해서 snapshot 으로 다 더져 보내주다니..
   // 근데 값이 바뀌면 리스트 전체를 리사이클링 뚜루를 한다는데.. 괜찮을까?
   Stream<List<JobModel>> get jobList {
-    return jobCollectionReference
-        .snapshots()
-        .map((snapshot) => _transformIntoJobModelListFromSnapshot(snapshot));
+    try {
+      var result = jobCollectionReference
+          .snapshots(includeMetadataChanges: true)
+          .map((snapshot) => _transformIntoJobModelListFromSnapshot(snapshot));
+      print(
+          '[⭐⭐⭐⭐ ️database_service/jobList 새로 바뀐 List<JobModel> 의 값은 : ${jobCollectionReference.snapshots().map((event) => print('xxx ${event.docs.length}'))}');
+      return result;
+    } on Exception {
+      print('jobList 를 생성하는 과정에서 예외가 발생했습니다.');
+      throw Exception(); // 이렇게 Stream 에 Exception 을 넘겨준다.
+    }
   }
 
   // get user doc stream : 이럴필요가 있는지 보자. 이게 진행되는게 너무나도 아름답네.. 각종 데이터들을 받아오고 만들어서 새로운 나의 데이터를 던져준다.
@@ -81,9 +89,11 @@ class DatabaseService {
     // QuerySnapshot 에서 JobModel 로 변환
     // [issue] The argument type 'Object?' can't be assigned to the parameter type 'Map<String, dynamic>'
     // [answer] https://stackoverflow.com/questions/70621423/the-argument-type-object-cant-be-assigned-to-the-parameter-type-mapdynamic
-    return querySnapshot.docs
+    var result = querySnapshot.docs
         .map((doc) => JobModel.fromJson(doc.data() as Map<String, dynamic>))
         .toList();
+    print('transform 한 result 값은 : ${result[0].coupon}'); // 여기보면
+    return result;
     /*return querySnapshot.docs.map((doc) {
       return JobModel(
         name: doc.get('name') ?? '',
