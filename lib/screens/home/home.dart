@@ -1,25 +1,17 @@
 import 'package:better_touching_staff/controllers/auth_controller.dart';
-import 'package:better_touching_staff/model/job_model.dart';
 import 'package:better_touching_staff/screens/home/job_list.dart';
 import 'package:better_touching_staff/screens/home/settings_form.dart';
-import 'package:better_touching_staff/services/database_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // 이것도 wrapper widget 인데 프로그램이 크지 않기 때문에 그냥 stateless 로 하고 BottomSheet 을 사용한다.
-class Home extends StatelessWidget {
-  final AuthController _authController = AuthController();
+class Home extends ConsumerWidget {
 
   Home({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    // StreamProvider 를 통해서 List<JobModel> 을 받는다.
-    return StreamProvider<List<JobModel>?>.value(
-      initialData: null,
-      // QuerySnapshot? null 로 해주어야 initialData 도 null 이 될 수 있다.
-      value: DatabaseService().jobList,
-      child: Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) {
+      return Scaffold(
         backgroundColor: Colors.brown[50],
         appBar: AppBar(
           title: const Text('Staffan'),
@@ -44,7 +36,7 @@ class Home extends StatelessWidget {
             ElevatedButton.icon(
                 // Sign Out
                 onPressed: () {
-                  final dynamic result = _authController.signOut();
+                  final dynamic result = ref.read(authControllerProvider).signOut();
                   result ?? print('Please check with the internet connection');
                 },
                 // ElevatedButton without, no, remove border
@@ -66,8 +58,7 @@ class Home extends StatelessWidget {
             )
           ),
             child: const JobList()),
-      ),
-    );
+      );
   }
 
   void _showSettingsPanel(BuildContext context) {

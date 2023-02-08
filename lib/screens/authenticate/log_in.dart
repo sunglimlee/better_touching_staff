@@ -1,20 +1,24 @@
 import 'package:better_touching_staff/controllers/auth_controller.dart';
 import 'package:better_touching_staff/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LogIn extends StatefulWidget {
+
+
+
+
+class LogIn extends ConsumerStatefulWidget {
   final Function callBack;
 
   const LogIn({Key? key, required this.callBack}) : super(key: key);
 
   @override
-  State<LogIn> createState() => _LogInState();
+  ConsumerState createState() => _LogInState();
 }
 
-class _LogInState extends State<LogIn> {
-  final AuthController _authController = AuthController();
+class _LogInState extends ConsumerState<LogIn> {
+  //final AuthController _authController = AuthController();
   final _formKey = GlobalKey<FormState>();
-
   String email = '';
   String password = '';
   String error = ''; // firebase 에서 전달받은 값이 null 이라면 error 처리를 해주어야 한다.
@@ -22,6 +26,8 @@ class _LogInState extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
+    final authController = ref.watch(authControllerProvider);
+
     return Scaffold(
       backgroundColor: Colors.brown[100],
       appBar: AppBar(
@@ -107,8 +113,9 @@ class _LogInState extends State<LogIn> {
                           setState(() {
                             loading = true;
                           });
+                          // 이부분을 굳이 Riverpod 에 올릴 이유가 없다는 거지..
                           dynamic result =
-                              await _authController.loginWithEmailAndPassword(
+                              await authController.loginWithEmailAndPassword(
                                   email.toString(), password.toString());
                           if (result == null) {
                             setState(() {

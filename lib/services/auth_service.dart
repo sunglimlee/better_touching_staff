@@ -52,8 +52,8 @@ class AuthService {
       // create a new document for the user with the uid
       // 반드시 await 를 해주어야 한다. 기억해라 database 작업은 반드시 await 를 해주어야 한다. 안그러면 그냥 넘어가 버린다. 꼭 꼭 꼭 기억하자.
       user != null
-          ? await DatabaseController(user: user)
-              .addNewUserDummyDataIntoFirestore('New User')
+          ? await DatabaseController(user)
+              .addNewUserDummyDataIntoFirestore()
           : print('User is Null in [AuthService]');
       return user;
     } catch (e) {

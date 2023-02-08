@@ -3,12 +3,14 @@ import 'package:better_touching_staff/model/job_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+
+
 /// Firestore 에 CRUD 를 작업하기 위한 서비스 클래스 (DatabaseService)
 class DatabaseService {
   // user id 는 Firestore 에서 항상 얻어올 수 있다.
   final User? user;
 
-  DatabaseService({this.user});
+  DatabaseService({required this.user});
 
   // collection reference
   final CollectionReference jobCollectionReference =

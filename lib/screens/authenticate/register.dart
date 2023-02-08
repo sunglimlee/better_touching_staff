@@ -1,18 +1,19 @@
 import 'package:better_touching_staff/controllers/auth_controller.dart';
 import 'package:better_touching_staff/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Register extends StatefulWidget {
+class Register extends ConsumerStatefulWidget {
   final Function callBack;
 
   const Register({Key? key, required this.callBack}) : super(key: key);
 
   @override
-  State<Register> createState() => _RegisterState();
+  ConsumerState createState() => _RegisterState();
 }
 
-class _RegisterState extends State<Register> {
-  final AuthController _authController = AuthController();
+class _RegisterState extends ConsumerState<Register> {
+//  final AuthController _authController = AuthController();
   final _formKey = GlobalKey<FormState>();
 
   String email = '';
@@ -22,6 +23,9 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+
+    final authControllerWatch = ref.watch(authControllerProvider);
+
     return Scaffold(
       backgroundColor: Colors.brown[100],
       appBar: AppBar(
@@ -109,7 +113,7 @@ class _RegisterState extends State<Register> {
                           setState(() {
                             loading = true;
                           });
-                          dynamic result = await _authController
+                          dynamic result = await authControllerWatch
                               .registerWithEmailAndPassword(
                                   email.toString(), password.toString());
                           // 여기다가 새로운 User 의 uid 를 이용해서 dummy data 를 collection 에 저장하고 싶어...
